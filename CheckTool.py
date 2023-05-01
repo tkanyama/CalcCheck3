@@ -1746,7 +1746,6 @@ class CheckTool():
 
                 fp.close()
                 folderName = ""
-                os.remove("./kind.txt")
             # end with
 
         except OSError as e:
@@ -1819,7 +1818,7 @@ class CheckTool():
         #end try
 
         # すべての処理がエラーなく終了したのでTrueを返す。
-        return True
+        return True, kind, version
 
     #end def    
     #*********************************************************************************
@@ -1840,20 +1839,7 @@ class CheckTool():
         #end if
 
         pdf_file = filename
-        # pdf_out_file = outfilenme
-
-        # PDFファイルを回転して保存
-        # def pdf_roll(p_file, p_angle):
-        #     file = PyPDF2.PdfFileReader(open(p_file + '.pdf', 'rb'))
-        #     file_output = PyPDF2.PdfFileWriter()
-        #     for page_num in range(file.numPages):
-        #         page = file.getPage(page_num)
-        #         page.rotateClockwise(p_angle)
-        #         file_output.addPage(page)
-        #     with open(p_file + '_roll.pdf', 'wb') as f:
-        #         file_output.write(f)
-
-
+    
         # PyPDF2のツールを使用してPDFのページ情報を読み取る。
         # PDFのページ数と各ページの用紙サイズを取得
         PaperSize = []
@@ -2433,8 +2419,11 @@ class multicheck:
     #  表紙から計算プログラムの種類を検出する関数
     #============================================================================
     def TopPageCheck(self):
+        global kind, version
         CT = CheckTool()
         self.kind, self.verison = CT.TopPageCheckTool(self.fnames[0],self.dir2,self.limit)
+        kind = self.kind
+        version = self.version
     
     #============================================================================
     #  分割された計算書から数値検出する関数
@@ -2455,7 +2444,7 @@ class multicheck:
     #       分割された計算書の並列処理
     #============================================================================
     def doCheck(self):
-
+        global kind, version
 #       計算書の分割        
         self.makepdf()
 
